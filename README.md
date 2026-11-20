@@ -1,250 +1,129 @@
-<<<<<<< HEAD
-# TeachSpace (MVP) — Your Teaching, Organized.
-
-**TeachSpace** adalah platform manajemen akademik pribadi (*Personal Academic Management Platform*) untuk guru sekolah, guru les privat, tutor bimbingan belajar, dan pengajar independen. Setiap pengguna memiliki *workspace* terisolasi secara mandiri tanpa memerlukan akun administrator sekolah.
-
----
-
-## 1. Persyaratan Instalasi
-
-- Sistem Operasi: Windows 10/11, macOS, atau Linux
-- **Node.js LTS** (disarankan versi 20.x atau 22.x) + **npm**
-- **MySQL Server 8.x** (bisa melalui MySQL Community Server, Laragon, XAMPP/MySQL 8, atau Docker)
-- **Visual Studio Code** (disarankan ekstensi: *ES7+ React/Redux/React-Native snippets*, *ESLint*, *Tailwind CSS IntelliSense*)
-- **Git** (opsional untuk version control)
-
----
-
-## 2. Instalasi Node.js
-
-1. Unduh **Node.js LTS** dari [https://nodejs.org](https://nodejs.org).
-2. Jalankan installer dan ikuti instruksi hingga selesai.
-3. Verifikasi instalasi melalui terminal:
-
-```bash
-node -v
-npm -v
-```
-
----
-
-## 3. Instalasi MySQL 8.x
-
-1. Unduh MySQL Community Server 8.x dari [https://dev.mysql.com/downloads/mysql/](https://dev.mysql.com/downloads/mysql/) atau gunakan Docker:
-
-```bash
-docker run --name teachspace-mysql -e MYSQL_ROOT_PASSWORD=rootpassword -p 3306:3306 -d mysql:8.0
-```
-
-2. Pastikan layanan MySQL aktif dan cek versi MySQL:
-
-```bash
-mysql --version
-```
-
----
-
-## 4. Membuka Proyek di Visual Studio Code
-
-1. Ekstrak file `TeachSpace-MVP.zip`.
-2. Buka **Visual Studio Code**, pilih **File -> Open Folder...**, lalu pilih folder `teachspace/`.
-3. Buka terminal terintegrasi di VS Code dengan menekan `Ctrl + ~` (Windows/Linux) atau `Cmd + ~` (macOS).
-
----
-
-## 5. Membuat Database MySQL
-
-Masuk ke MySQL CLI lalu buat database `teachspace_db`:
-
-```bash
-mysql -u root -p
-```
-
-Di dalam prompt MySQL:
-
-```sql
-CREATE DATABASE IF NOT EXISTS teachspace_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-EXIT;
-```
-
----
-
-## 6. Import `schema.sql`
-
-Jalankan perintah berikut dari folder root `teachspace/` untuk membuat seluruh 18 tabel relasional, foreign key, unique constraint, dan indeks:
-
-```bash
-mysql -u root -p teachspace_db < database/schema.sql
-```
-
-*(Untuk Windows PowerShell)*:
-
-```powershell
-Get-Content database/schema.sql | mysql -u root -p teachspace_db
-```
-
----
-
-## 7. Menjalankan `seed.sql` (Data Demo)
-
-Import data demo awal (kelas, siswa, mapel, jadwal, absensi, nilai, serta akun demo):
-
-```bash
-mysql -u root -p teachspace_db < database/seed.sql
-```
-
-*(Untuk Windows PowerShell)*:
-
-```powershell
-Get-Content database/seed.sql | mysql -u root -p teachspace_db
-```
-
----
-
-## 8. Konfigurasi `.env`
-
-1. Salin file template environment backend:
-
-```bash
-cp server/.env.example server/.env
-```
-
-*(Windows PowerShell)*:
-
-```powershell
-Copy-Item server/.env.example server/.env
-```
-
-2. Buka `server/.env` di VS Code dan sesuaikan kredensial MySQL serta secret key Anda:
-
-```env
-PORT=5000
-NODE_ENV=development
-CLIENT_URL=http://localhost:5173
-
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_USER=root
-DB_PASSWORD=password_mysql_anda
-DB_NAME=teachspace_db
-
-JWT_SECRET=ganti_dengan_string_acak_minimal_32_karakter
-CSRF_SECRET=ganti_dengan_string_acak_csrf_minimal_32_karakter
-JWT_EXPIRES_IN=7d
-```
-
----
-
-## 9. Instalasi Dependency
-
-Jalankan perintah berikut dari folder root `teachspace/` untuk menginstal seluruh package root, backend (`server/`), dan frontend (`client/`):
-
-```bash
-npm run install:all
-```
-
-Atau satu per satu:
-
-```bash
-npm install
-npm --prefix server install
-npm --prefix client install
-```
-
----
-
-## 10. Menjalankan Backend
-
-Dari folder `teachspace/`:
-
-```bash
-npm run dev:server
-```
-
-Atau dari dalam folder `teachspace/server/`:
-
-```bash
-npm run dev
-```
-
-Jika berhasil, terminal akan menampilkan:
-`MySQL connection verified (teachspace_db).`
-`TeachSpace API Server running on http://localhost:5000`
-
----
-
-## 11. Menjalankan Frontend
-
-Buka terminal baru di VS Code, lalu dari folder `teachspace/`:
-
-```bash
-npm run dev:client
-```
-
-Atau jalankan **backend & frontend sekaligus** dari folder root `teachspace/`:
-
-```bash
-npm run dev
-```
-
----
-
-## 12. URL Aplikasi
-
-- **Frontend (React + Vite)**: [http://localhost:5173](http://localhost:5173)
-
----
-
-## 13. URL API
-
-- **Backend REST API**: [http://localhost:5000/api/v1](http://localhost:5000/api/v1)
-- **Health Check**: [http://localhost:5000/api/v1/health](http://localhost:5000/api/v1/health)
-
----
-
-## 14. Akun Demo
-
-Anda dapat langsung mendaftar mandiri melalui tab **Daftar Mandiri**, atau login menggunakan akun demo dari `database/seed.sql`:
-
-| Peran | Email | Password |
-| :--- | :--- | :--- |
-| Guru Sekolah (Workspace 1) | `guru@teachspace.id` | `TeachSpace123!` |
-| Tutor Privat (Workspace 2 - Terisolasi) | `tutor@teachspace.id` | `TeachSpace123!` |
-
----
-
-## 15. Troubleshooting Error Umum
-
-1. **`Access denied for user 'root'@'localhost'`**
-   - Periksa kembali `DB_USER` dan `DB_PASSWORD` di file `server/.env`.
-2. **`Unknown database 'teachspace_db'`**
-   - Pastikan Anda sudah mengimpor `database/schema.sql`.
-3. **`ECONNREFUSED 127.0.0.1:3306`**
-   - Pastikan service MySQL 8.x sudah berjalan di komputer Anda.
-4. **Error CSRF 403 saat melakukan POST/PUT/DELETE**
-   - Pastikan frontend mengakses backend melalui Vite proxy (`http://localhost:5173`) sehingga cookie `HttpOnly` terkirim pada origin yang sama, dan pastikan `CLIENT_URL` di `server/.env` sesuai (`http://localhost:5173`).
-5. **Upload file materi ditolak**
-   - Pastikan ukuran file $\le 10$ MB dan formatnya termasuk `PDF`, `DOC`, `DOCX`, `PPT`, `PPTX`, `JPG`, `PNG`, atau `WEBP`.
-
----
-
-## 16. Cara Build untuk Production
-
-1. Build aplikasi frontend:
-
-```bash
-npm run build
-```
-
-Hasil build production tersimpan di `client/dist/`.
-
-2. Jalankan server backend dalam mode production:
-
-```bash
-NODE_ENV=production npm run start
-```
-
-Pastikan pada environment production `JWT_SECRET` dan `CSRF_SECRET` menggunakan string acak yang kuat serta HTTPS aktif agar cookie `HttpOnly` berstatus `Secure`.
-=======
 # TeachSpace
->>>>>>> b34a80fba01a6790fb56fd6d8a220e82f5ed15c5
+
+**A Modern Digital Learning Management Platform**
+
+TeachSpace adalah platform pembelajaran digital berbasis web yang dirancang untuk membantu pengelolaan kegiatan belajar mengajar secara lebih terstruktur, terpusat, dan efisien.
+
+Platform ini menyediakan ruang digital bagi pengajar dan peserta didik untuk berinteraksi, mengelola materi pembelajaran, serta memantau aktivitas akademik dalam satu sistem yang terintegrasi.
+
+---
+
+## 1. Tentang TeachSpace
+
+Perkembangan teknologi digital mendorong kebutuhan akan sistem pembelajaran yang fleksibel dan mudah diakses. Namun, proses pembelajaran masih sering menggunakan berbagai platform yang terpisah untuk mengelola materi, komunikasi, tugas, dan aktivitas akademik.
+
+TeachSpace dikembangkan sebagai solusi untuk menyatukan kebutuhan tersebut ke dalam satu platform digital.
+
+Dengan pendekatan yang berorientasi pada kemudahan penggunaan dan efisiensi, TeachSpace bertujuan menciptakan lingkungan pembelajaran digital yang lebih terorganisir, modern, dan mudah digunakan.
+
+## 2. Tujuan Pengembangan
+
+TeachSpace dikembangkan dengan beberapa tujuan utama:
+
+- **Centralized Learning:** Menyatukan berbagai kebutuhan pembelajaran dalam satu platform.
+- **Learning Management:** Mempermudah pengelolaan kelas, materi, dan aktivitas pembelajaran.
+- **Collaboration:** Mendukung interaksi antara pengajar dan peserta didik.
+- **Accessibility:** Memberikan akses pembelajaran melalui platform berbasis web.
+- **Efficiency:** Mengurangi kompleksitas pengelolaan kegiatan akademik.
+
+## 3. Fitur Utama
+
+TeachSpace dirancang dengan beberapa fitur utama untuk mendukung ekosistem pembelajaran digital.
+
+### User Authentication
+Sistem autentikasi pengguna untuk mengelola akses ke platform melalui proses registrasi dan login.
+
+### Dashboard
+Halaman utama pengguna yang berfungsi sebagai pusat informasi dan navigasi menuju berbagai aktivitas pembelajaran.
+
+### Workspace Management
+Ruang kerja digital untuk mengorganisasi kegiatan pembelajaran berdasarkan kebutuhan pengguna atau kelompok belajar.
+
+### Learning Management
+Pengelolaan aktivitas pembelajaran agar materi dan kegiatan akademik dapat tersusun secara sistematis.
+
+### User Management
+Pengelolaan informasi dan akun pengguna sesuai dengan peran serta hak akses masing-masing.
+
+### Responsive Interface
+Antarmuka yang dirancang agar dapat digunakan melalui berbagai ukuran layar, baik desktop maupun perangkat mobile.
+
+## 4. Teknologi yang Digunakan
+
+TeachSpace dikembangkan menggunakan teknologi web modern dengan pemisahan antara frontend dan backend.
+
+| Teknologi | Fungsi |
+|---|---|
+| React.js | Pengembangan antarmuka frontend |
+| Vite | Development dan build frontend |
+| Tailwind CSS / CSS | Styling dan desain antarmuka |
+| Node.js | Runtime backend |
+| Express.js | Backend API dan routing |
+| MySQL | Relational database |
+| Nginx | Web server dan reverse proxy |
+
+## 5. Arsitektur Sistem
+
+TeachSpace menggunakan pendekatan client-server architecture yang memisahkan tanggung jawab antara antarmuka pengguna, layanan backend, dan penyimpanan data.
+
+Secara umum, alur sistem terdiri dari:
+
+1. **Frontend:** Menampilkan antarmuka dan menerima interaksi pengguna.
+2. **Backend API:** Memproses permintaan, menjalankan logika aplikasi, dan mengelola autentikasi.
+3. **Database:** Menyimpan serta mengelola data aplikasi secara terstruktur.
+4. **Web Server:** Mengatur akses dan komunikasi antara client dengan layanan backend.
+
+Pemisahan tersebut bertujuan meningkatkan modularitas, kemudahan pemeliharaan, dan pengembangan fitur di masa mendatang.
+
+## 6. Keamanan Sistem
+
+Keamanan menjadi salah satu aspek penting dalam pengembangan TeachSpace.
+
+Beberapa aspek keamanan yang menjadi perhatian dalam pengembangan sistem meliputi:
+
+- Autentikasi pengguna.
+- Pengelolaan hak akses berdasarkan peran.
+- Validasi data pada sisi server.
+- Pengelolaan koneksi antara frontend dan backend.
+- Perlindungan informasi sensitif.
+- Pengelolaan konfigurasi aplikasi melalui environment variables.
+
+## 7. Target Pengguna
+
+TeachSpace ditujukan untuk mendukung kebutuhan berbagai pihak dalam lingkungan pembelajaran, antara lain:
+
+- **Pengajar:** Mengelola aktivitas dan kebutuhan pembelajaran.
+- **Peserta Didik:** Mengakses ruang dan aktivitas pembelajaran.
+- **Administrator:** Mengelola sistem dan pengguna platform.
+
+## 8. Pengembangan Selanjutnya
+
+TeachSpace dirancang agar dapat terus dikembangkan mengikuti kebutuhan pembelajaran digital.
+
+Beberapa potensi pengembangan di masa mendatang meliputi:
+
+- Sistem notifikasi aktivitas pembelajaran.
+- Pengelolaan tugas dan penilaian.
+- Fitur komunikasi dan kolaborasi.
+- Analytics dan laporan aktivitas pembelajaran.
+- Pengembangan sistem workspace yang lebih fleksibel.
+- Integrasi layanan pihak ketiga.
+
+## 9. Status Proyek
+
+**TeachSpace — Active Development**
+
+TeachSpace merupakan proyek pengembangan platform pembelajaran digital yang terus mengalami penyempurnaan, baik dari sisi antarmuka, fungsionalitas, arsitektur backend, maupun pengelolaan database.
+
+Fitur dan kemampuan sistem dapat berkembang seiring proses pengembangan berlangsung.
+
+## 10. Visi Proyek
+
+TeachSpace memiliki visi untuk menjadi platform pembelajaran digital yang menyediakan lingkungan belajar terintegrasi, mudah digunakan, dan adaptif terhadap perkembangan teknologi pendidikan.
+
+Dengan menggabungkan teknologi web modern dan pendekatan pengelolaan pembelajaran terpusat, TeachSpace diharapkan dapat membantu menciptakan pengalaman belajar yang lebih efektif dan terorganisir.
+
+---
+
+**TeachSpace**  
+*One Space. Better Learning.*
