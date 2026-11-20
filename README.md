@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # TeachSpace (MVP) — Your Teaching, Organized.
 
 **TeachSpace** adalah platform manajemen akademik pribadi (*Personal Academic Management Platform*) untuk guru sekolah, guru les privat, tutor bimbingan belajar, dan pengajar independen. Setiap pengguna memiliki *workspace* terisolasi secara mandiri tanpa memerlukan akun administrator sekolah.
@@ -244,3 +245,6 @@ NODE_ENV=production npm run start
 ```
 
 Pastikan pada environment production `JWT_SECRET` dan `CSRF_SECRET` menggunakan string acak yang kuat serta HTTPS aktif agar cookie `HttpOnly` berstatus `Secure`.
+=======
+# TeachSpace
+>>>>>>> b34a80fba01a6790fb56fd6d8a220e82f5ed15c5
