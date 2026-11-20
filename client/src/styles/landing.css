@@ -1,0 +1,172 @@
+/* ==========================================================================
+   TeachSpace Standalone Landing Page Styles
+   Consistent with TeachSpace Design Tokens (#142B4A, #3478C8, #EAF2FB, #F7F9FC)
+   ========================================================================== */
+
+:root {
+  --ts-navy: #142B4A;
+  --ts-navy-hover: #1E3D66;
+  --ts-blue: #3478C8;
+  --ts-blue-hover: #2A65AC;
+  --ts-light-blue: #EAF2FB;
+  --ts-white: #FFFFFF;
+  --ts-bg: #F7F9FC;
+  --ts-border: #E2E8F0;
+  --ts-muted: #64748B;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+.ts-landing {
+  font-family: "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background-color: var(--ts-bg);
+  color: var(--ts-navy);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.ts-landing h1,
+.ts-landing h2,
+.ts-landing h3,
+.ts-landing h4,
+.ts-landing .ts-font-display {
+  font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.ts-landing .ts-font-mono {
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.ts-balance {
+  text-wrap: balance;
+}
+
+/* Subtle dot grid texture for hero canvas */
+.ts-hero-surface {
+  background-color: var(--ts-bg);
+  background-image: radial-gradient(rgba(20, 43, 74, 0.06) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Sticky navbar transition */
+.ts-navbar {
+  transition: background-color 200ms cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 200ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 200ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ts-navbar-scrolled {
+  background-color: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom-color: rgba(226, 232, 240, 0.9);
+  box-shadow: 0 4px 20px -8px rgba(20, 43, 74, 0.08);
+}
+
+/* Viewport scroll reveal (compositor-only transform + opacity) */
+.ts-reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 560ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 560ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.ts-reveal.ts-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Subtle floating animation for hero dashboard preview */
+@keyframes tsFloat {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-7px);
+  }
+}
+
+.ts-hero-float {
+  animation: tsFloat 6.5s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* Feature card micro-interaction (<= 200ms) */
+.ts-card-hover {
+  transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 180ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ts-card-hover:hover {
+  transform: translateY(-3px);
+  border-color: rgba(52, 120, 200, 0.35);
+  box-shadow: 0 12px 24px -12px rgba(20, 43, 74, 0.12);
+}
+
+/* Button tactile feedback (<= 180ms) */
+.ts-btn {
+  transition: background-color 160ms cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 160ms cubic-bezier(0.16, 1, 0.3, 1),
+    color 160ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 140ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ts-btn:active {
+  transform: translateY(1px);
+}
+
+/* Smooth FAQ accordion using CSS grid rows */
+.ts-accordion-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 240ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ts-accordion-panel[data-open="true"] {
+  grid-template-rows: 1fr;
+}
+
+.ts-accordion-inner {
+  overflow: hidden;
+}
+
+/* Accessible focus ring matching TeachSpace blue */
+.ts-landing a:focus-visible,
+.ts-landing button:focus-visible {
+  outline: 2px solid var(--ts-blue);
+  outline-offset: 2px;
+}
+
+/* Respect user motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .ts-hero-float {
+    animation: none;
+  }
+
+  .ts-reveal,
+  .ts-reveal.ts-revealed {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .ts-card-hover,
+  .ts-card-hover:hover,
+  .ts-btn,
+  .ts-btn:active,
+  .ts-navbar,
+  .ts-accordion-panel {
+    transition: none;
+    transform: none;
+  }
+}
