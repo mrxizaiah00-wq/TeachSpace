@@ -6,7 +6,7 @@ TeachSpace adalah platform pembelajaran digital berbasis web yang dirancang untu
 
 Platform ini menyediakan ruang digital bagi pengajar dan peserta didik untuk berinteraksi, mengelola materi pembelajaran, serta memantau aktivitas akademik dalam satu sistem yang terintegrasi.
 
-Website : teachspace.rafengine.tech
+Website : https://teachspace.rafengine.tech
 
 ---
 
